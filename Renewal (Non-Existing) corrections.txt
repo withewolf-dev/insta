@@ -1,0 +1,4 @@
+Category A 
+
+*Company Partners Information - delete button not working in table
+
