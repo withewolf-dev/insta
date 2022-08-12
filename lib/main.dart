@@ -97,7 +97,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     addData();
   }
@@ -127,6 +126,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).getUser;
+
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: SizedBox(

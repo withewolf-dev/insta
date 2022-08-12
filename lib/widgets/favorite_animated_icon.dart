@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:insta/model/user.dart';
+import 'package:insta/resource/firestore_method.dart';
 
 class FavoriteAnimatedIcon extends StatefulWidget {
-  const FavoriteAnimatedIcon({Key? key}) : super(key: key);
+  final User user;
+  final snap;
+  const FavoriteAnimatedIcon({Key? key, required this.snap, required this.user})
+      : super(key: key);
 
   @override
   State<FavoriteAnimatedIcon> createState() => _FavoriteAnimatedIconState();
@@ -11,7 +16,9 @@ class _FavoriteAnimatedIconState extends State<FavoriteAnimatedIcon>
     with SingleTickerProviderStateMixin {
   bool _isLiked = false;
 
-  void isliked() {
+  void isliked() async {
+    await FireStoreMethods()
+        .likePost(widget.snap['postId'], widget.user.uid, widget.snap['likes']);
     if (_isLiked) {
       _isLiked = false;
     } else {
@@ -35,7 +42,6 @@ class _FavoriteAnimatedIconState extends State<FavoriteAnimatedIcon>
   late AnimationController _animationController;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 50),
@@ -49,7 +55,6 @@ class _FavoriteAnimatedIconState extends State<FavoriteAnimatedIcon>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _animationController.dispose();
   }

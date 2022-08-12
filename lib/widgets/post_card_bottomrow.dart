@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:insta/model/user.dart';
+import 'package:insta/provider/user_provider.dart';
 import 'package:insta/widgets/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class PostCardBottomRow extends StatelessWidget {
   final snap;
@@ -8,6 +11,8 @@ class PostCardBottomRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User? user = Provider.of<UserProvider>(context).getUser;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -17,7 +22,7 @@ class PostCardBottomRow extends StatelessWidget {
           children: [
             Row(
               children: [
-                FavoriteAnimatedIcon(),
+                FavoriteAnimatedIcon(user: user!, snap: snap),
                 IconButton(
                   onPressed: () {},
                   icon: const Icon(Icons.mode_comment_outlined),
@@ -45,7 +50,9 @@ class PostCardBottomRow extends StatelessWidget {
               const SizedBox(
                 height: 5,
               ),
-              caption(caption: snap["description"], username: snap["username"]),
+              caption(
+                  caption: ' ${snap["description"]}',
+                  username: snap["username"]),
               const SizedBox(
                 height: 5,
               ),

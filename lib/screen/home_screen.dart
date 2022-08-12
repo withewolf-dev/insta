@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:insta/model/user.dart';
+import 'package:insta/provider/user_provider.dart';
 import 'package:insta/resource/auth_method.dart';
 import 'package:insta/screen/login_screen.dart';
 import 'package:insta/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -16,8 +19,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final User? user = Provider.of<UserProvider>(context).getUser;
+
     return Scaffold(
-      backgroundColor: Colors.black12,
       appBar: homeScreenAppbar(context: context),
       body: SafeArea(
         child: StreamBuilder(
@@ -29,7 +33,6 @@ class HomeScreen extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             }
-
             return ListView.builder(
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (ctx, index) => PostContainer(

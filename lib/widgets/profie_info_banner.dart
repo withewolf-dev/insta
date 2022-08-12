@@ -10,14 +10,14 @@ class ProfileInforBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    model.User user = Provider.of<UserProvider>(context).getUser;
+    model.User? user = Provider.of<UserProvider>(context).getUser;
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.only(top: 5.0, right: 10.0, left: 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          metaInfoRow(width, user.photoUrl),
+          metaInfoRow(photoUrl: user!.photoUrl, width: width),
           const SizedBox(
             height: 10,
           ),
@@ -140,7 +140,7 @@ class ProfileInforBanner extends StatelessWidget {
     );
   }
 
-  Row metaInfoRow(double width, String photoUrl) {
+  Row metaInfoRow({required double width, required String photoUrl}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

@@ -73,7 +73,7 @@ class _AddPostState extends State<AddPost> {
 
   @override
   Widget build(BuildContext context) {
-    final User user = Provider.of<UserProvider>(widget.ctx).getUser;
+    final User? user = Provider.of<UserProvider>(widget.ctx).getUser;
 
     return Scaffold(
       appBar: AppBar(
@@ -94,7 +94,7 @@ class _AddPostState extends State<AddPost> {
         actions: <Widget>[
           TextButton(
             onPressed: (() => postImage(
-                uid: user.uid,
+                uid: user!.uid,
                 username: user.username,
                 profImage: user.photoUrl)),
             child: const Text(
@@ -120,7 +120,7 @@ class _AddPostState extends State<AddPost> {
               children: <Widget>[
                 CircleAvatar(
                   backgroundImage: NetworkImage(
-                    user.photoUrl,
+                    user!.photoUrl,
                   ),
                 ),
                 SizedBox(
