@@ -23,7 +23,7 @@ class _AddPostState extends State<AddPost> {
   void postImage(
       {required String uid,
       required String username,
-      required String profileImage}) async {
+      required String profImage}) async {
     setState(() {
       isLoading = true;
     });
@@ -35,7 +35,7 @@ class _AddPostState extends State<AddPost> {
         widget.photo,
         uid,
         username,
-        profileImage,
+        profImage,
       );
       if (res == "success") {
         setState(() {
@@ -96,7 +96,7 @@ class _AddPostState extends State<AddPost> {
             onPressed: (() => postImage(
                 uid: user.uid,
                 username: user.username,
-                profileImage: user.photoUrl)),
+                profImage: user.photoUrl)),
             child: const Text(
               "Post",
               style: TextStyle(

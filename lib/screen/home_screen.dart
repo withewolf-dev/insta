@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:insta/resource/auth_method.dart';
 import 'package:insta/screen/login_screen.dart';
@@ -16,14 +17,28 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black12,
-        appBar: homeScreenAppbar(context: context),
-        body: SafeArea(
-            child: ListView(
-          children: const [
-            PostContainer(),
-          ],
-        )));
+      backgroundColor: Colors.black12,
+      appBar: homeScreenAppbar(context: context),
+      body: SafeArea(
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+          builder: (context,
+              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (ctx, index) => PostContainer(
+                      snap: snapshot.data!.docs[index].data(),
+                    ));
+          },
+        ),
+      ),
+    );
   }
 
   AppBar homeScreenAppbar({required BuildContext context}) {

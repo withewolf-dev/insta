@@ -8,3 +8,5 @@ export 'profile_media_grid.dart';
 export 'post_grid_view.dart';
 export 'instagram_logo.dart';
 export 'text_input.dart ';
+export 'post_card_top_row.dart';
+// export 'post_card_bottomrow_icons.dart';
