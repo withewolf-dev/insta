@@ -10,3 +10,4 @@ export 'instagram_logo.dart';
 export 'text_input.dart ';
 export 'post_card_top_row.dart';
 // export 'post_card_bottomrow_icons.dart';
+export 'comment_card.dart';

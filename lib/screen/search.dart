@@ -1,112 +1,105 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class SearchPage extends StatelessWidget {
-  const SearchPage({Key? key}) : super(key: key);
+class SearchScreen extends StatefulWidget {
+  const SearchScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  final TextEditingController searchController = TextEditingController();
+  bool isShowUsers = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          title: const TextField(
-            cursorColor: Colors.black54,
-            decoration: InputDecoration(
-                hintText: 'Search',
-                prefixIcon: Icon(Icons.search),
-                fillColor: Colors.black12,
-                filled: true,
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    borderSide: BorderSide.none),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    borderSide: BorderSide.none)),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Form(
+          child: TextFormField(
+            controller: searchController,
+            decoration:
+                const InputDecoration(labelText: 'Search for a user...'),
+            onFieldSubmitted: (String _) {
+              setState(() {
+                isShowUsers = true;
+              });
+              print(_);
+            },
           ),
         ),
-        body: SafeArea(
-            child: ListView(
-                scrollDirection: Axis.vertical, children: [staggeredView()])));
-  }
+      ),
+      body: isShowUsers
+          ? FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('users')
+                  .where(
+                    'username',
+                    isGreaterThanOrEqualTo: searchController.text,
+                  )
+                  .get(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return ListView.builder(
+                  itemCount: (snapshot.data! as dynamic).docs.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      // onTap: () => Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //     builder: (context) => ProfileScreen(
+                      //       uid: (snapshot.data! as dynamic).docs[index]['uid'],
+                      //     ),
+                      //   ),
+                      // ),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            (snapshot.data! as dynamic).docs[index]['photoUrl'],
+                          ),
+                          radius: 16,
+                        ),
+                        title: Text(
+                          (snapshot.data! as dynamic).docs[index]['username'],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            )
+          : FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('posts')
+                  .orderBy('datePublished')
+                  .get(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
-  StaggeredGrid staggeredView() {
-    return StaggeredGrid.count(
-      crossAxisCount: 4,
-      mainAxisSpacing: 2,
-      crossAxisSpacing: 2,
-      children: [
-        StaggeredGridTile.count(
-            crossAxisCellCount: 2,
-            mainAxisCellCount: 2,
-            child: Image.network(
-              "https://images.unsplash.com/photo-1659785814117-a9b958b06d81?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-              fit: BoxFit.cover,
-            )),
-        StaggeredGridTile.count(
-            crossAxisCellCount: 2,
-            mainAxisCellCount: 1,
-            child: Image.network(
-              "https://images.unsplash.com/photo-1659812903039-d577a4844802?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-              fit: BoxFit.cover,
-            )),
-        StaggeredGridTile.count(
-            crossAxisCellCount: 1,
-            mainAxisCellCount: 1,
-            child: Image.network(
-              "https://images.unsplash.com/photo-1659877896436-c68914c0b348?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=438&q=80",
-              fit: BoxFit.cover,
-            )),
-        StaggeredGridTile.count(
-            crossAxisCellCount: 1,
-            mainAxisCellCount: 1,
-            child: Image.network(
-              "https://images.unsplash.com/photo-1659855286132-046855432688?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-              fit: BoxFit.cover,
-            )),
-        StaggeredGridTile.count(
-            crossAxisCellCount: 4,
-            mainAxisCellCount: 2,
-            child: Image.network(
-              "https://images.unsplash.com/photo-1659855286132-046855432688?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-              fit: BoxFit.cover,
-            )),
-        StaggeredGridTile.count(
-            crossAxisCellCount: 2,
-            mainAxisCellCount: 2,
-            child: Image.network(
-              "https://images.unsplash.com/photo-1659785814117-a9b958b06d81?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-              fit: BoxFit.cover,
-            )),
-        StaggeredGridTile.count(
-            crossAxisCellCount: 2,
-            mainAxisCellCount: 1,
-            child: Image.network(
-              "https://images.unsplash.com/photo-1659812903039-d577a4844802?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-              fit: BoxFit.cover,
-            )),
-        StaggeredGridTile.count(
-            crossAxisCellCount: 1,
-            mainAxisCellCount: 1,
-            child: Image.network(
-              "https://images.unsplash.com/photo-1659877896436-c68914c0b348?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=438&q=80",
-              fit: BoxFit.cover,
-            )),
-        StaggeredGridTile.count(
-            crossAxisCellCount: 1,
-            mainAxisCellCount: 1,
-            child: Image.network(
-              "https://images.unsplash.com/photo-1659855286132-046855432688?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-              fit: BoxFit.cover,
-            )),
-        StaggeredGridTile.count(
-            crossAxisCellCount: 4,
-            mainAxisCellCount: 2,
-            child: Image.network(
-              "https://images.unsplash.com/photo-1659855286132-046855432688?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-              fit: BoxFit.cover,
-            )),
-      ],
+                return StaggeredGridView.countBuilder(
+                  crossAxisCount: 3,
+                  itemCount: (snapshot.data! as dynamic).docs.length,
+                  itemBuilder: (context, index) => Image.network(
+                    (snapshot.data! as dynamic).docs[index]['postUrl'],
+                    fit: BoxFit.cover,
+                  ),
+                  staggeredTileBuilder: (index) => StaggeredTile.count(
+                      (index % 7 == 0) ? 2 : 1, (index % 7 == 0) ? 2 : 1),
+                  mainAxisSpacing: 8.0,
+                  crossAxisSpacing: 8.0,
+                );
+              },
+            ),
     );
   }
 }

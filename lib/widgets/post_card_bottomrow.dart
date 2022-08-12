@@ -1,13 +1,48 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:insta/model/user.dart';
 import 'package:insta/provider/user_provider.dart';
+import 'package:insta/screen/comment_screen.dart';
+import 'package:insta/utils/utils.dart';
 import 'package:insta/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class PostCardBottomRow extends StatelessWidget {
+class PostCardBottomRow extends StatefulWidget {
   final snap;
   const PostCardBottomRow({Key? key, required this.snap}) : super(key: key);
+
+  @override
+  State<PostCardBottomRow> createState() => _PostCardBottomRowState();
+}
+
+class _PostCardBottomRowState extends State<PostCardBottomRow> {
+  int commentLen = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchCommentLen();
+  }
+
+  fetchCommentLen() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .collection('comments')
+          .get();
+      setState(() {
+        commentLen = snap.docs.length;
+      });
+    } catch (err) {
+      showSnackBar(
+        context,
+        err.toString(),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +57,15 @@ class PostCardBottomRow extends StatelessWidget {
           children: [
             Row(
               children: [
-                FavoriteAnimatedIcon(user: user!, snap: snap),
+                FavoriteAnimatedIcon(user: user!, snap: widget.snap),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CommentsScreen(
+                        postId: widget.snap['postId'].toString(),
+                      ),
+                    ),
+                  ),
                   icon: const Icon(Icons.mode_comment_outlined),
                 ),
                 IconButton(
@@ -44,27 +85,28 @@ class PostCardBottomRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${snap['likes'].length} likes',
+                '${widget.snap['likes'].length} likes',
                 style: Theme.of(context).textTheme.bodyText2,
               ),
               const SizedBox(
                 height: 5,
               ),
               caption(
-                  caption: ' ${snap["description"]}',
-                  username: snap["username"]),
+                  caption: ' ${widget.snap["description"]}',
+                  username: widget.snap["username"]),
               const SizedBox(
                 height: 5,
               ),
-              const Text(
-                'View all 200 comments',
-                style: TextStyle(fontSize: 16, color: Colors.black45),
+              Text(
+                'View all $commentLen comments',
+                style: const TextStyle(fontSize: 16, color: Colors.black45),
               ),
               const SizedBox(
                 height: 5,
               ),
               Text(
-                DateFormat.yMMMd().format(snap['datePublished'].toDate()),
+                DateFormat.yMMMd()
+                    .format(widget.snap['datePublished'].toDate()),
                 style: const TextStyle(
                   color: Colors.black45,
                 ),

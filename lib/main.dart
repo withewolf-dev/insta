@@ -73,18 +73,21 @@ class BottomNavigation extends StatefulWidget {
 class _BottomNavigationState extends State<BottomNavigation> {
   int _selectedIndex = 0;
   Uint8List? _image;
+  late String uid;
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
+  static List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    SearchPage(),
+    SearchScreen(),
     LoginScreen(),
     Text(
       'Index 2: Business',
       style: optionStyle,
     ),
-    ProfileScreen()
+    ProfileScreen(
+      uid: FirebaseAuth.instance.currentUser!.uid,
+    )
   ];
 
   void _onItemTapped(int index) {
@@ -95,15 +98,15 @@ class _BottomNavigationState extends State<BottomNavigation> {
     }
   }
 
+  addData() async {
+    UserProvider userProvider = Provider.of(context, listen: false);
+    await userProvider.refreshUser();
+  }
+
   @override
   void initState() {
     super.initState();
     addData();
-  }
-
-  addData() async {
-    UserProvider userProvider = Provider.of(context, listen: false);
-    await userProvider.refreshUser();
   }
 
   void selectImage() async {
