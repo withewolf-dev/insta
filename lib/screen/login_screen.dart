@@ -7,6 +7,8 @@ import 'package:insta/utils/utils.dart';
 import 'package:insta/widgets/instagram_logo.dart';
 import 'package:insta/widgets/widgets.dart';
 
+import '../main.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -27,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text, password: _passwordController.text);
     if (res == 'success') {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          MaterialPageRoute(builder: (context) => const BottomNavigation()),
           (route) => false);
 
       setState(() {

@@ -1,13 +1,17 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:insta/model/user.dart';
+import 'package:insta/provider/user_provider.dart';
 import 'package:insta/resource/firestore_method.dart';
 import 'package:insta/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class AddPost extends StatefulWidget {
-  const AddPost({Key? key, required this.photo}) : super(key: key);
+  const AddPost({Key? key, required this.photo, required this.ctx})
+      : super(key: key);
   final Uint8List photo;
-
+  final BuildContext ctx;
   @override
   State<AddPost> createState() => _AddPostState();
 }
@@ -16,7 +20,10 @@ class _AddPostState extends State<AddPost> {
   bool isLoading = false;
   final TextEditingController _descriptionController = TextEditingController();
 
-  void postImage(String uid, String username, String profImage) async {
+  void postImage(
+      {required String uid,
+      required String username,
+      required String profileImage}) async {
     setState(() {
       isLoading = true;
     });
@@ -28,7 +35,7 @@ class _AddPostState extends State<AddPost> {
         widget.photo,
         uid,
         username,
-        profImage,
+        profileImage,
       );
       if (res == "success") {
         setState(() {
@@ -66,17 +73,89 @@ class _AddPostState extends State<AddPost> {
 
   @override
   Widget build(BuildContext context) {
+    final User user = Provider.of<UserProvider>(widget.ctx).getUser;
+
     return Scaffold(
-      body: SafeArea(
-          child: Center(
-              child: Container(
-        width: 150,
-        height: 150,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              fit: BoxFit.cover, image: MemoryImage(widget.photo, scale: 0.5)),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {},
         ),
-      ))),
+        title: const Text(
+          'Post to',
+          style: TextStyle(color: Colors.black),
+        ),
+        centerTitle: false,
+        actions: <Widget>[
+          TextButton(
+            onPressed: (() => postImage(
+                uid: user.uid,
+                username: user.username,
+                profileImage: user.photoUrl)),
+            child: const Text(
+              "Post",
+              style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0),
+            ),
+          )
+        ],
+      ),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            isLoading
+                ? const LinearProgressIndicator()
+                : const Padding(padding: EdgeInsets.only(top: 0.0)),
+            const Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    user.photoUrl,
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  child: TextField(
+                    controller: _descriptionController,
+                    decoration: const InputDecoration(
+                        hintText: "Write a caption...",
+                        border: InputBorder.none),
+                    maxLines: 8,
+                  ),
+                ),
+                SizedBox(
+                  height: 45.0,
+                  width: 45.0,
+                  child: AspectRatio(
+                    aspectRatio: 487 / 451,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.fill,
+                            alignment: FractionalOffset.topCenter,
+                            image: MemoryImage(
+                              (widget.photo),
+                            )),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            const Divider(),
+          ],
+        ),
+      ),
     );
   }
 }

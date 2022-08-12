@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:insta/firebase_options.dart';
-import 'package:insta/provider/user_procider.dart';
+import 'package:insta/provider/user_provider.dart';
 import 'package:insta/screen/add_post.dart';
 import 'package:insta/screen/home_screen.dart';
 import 'package:insta/screen/login_screen.dart';
@@ -95,12 +95,12 @@ class _BottomNavigationState extends State<BottomNavigation> {
     }
   }
 
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   addData();
-  // }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    addData();
+  }
 
   addData() async {
     UserProvider userProvider = Provider.of(context, listen: false);
@@ -113,7 +113,11 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
       if (image != null) {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => AddPost(photo: image)),
+          MaterialPageRoute(
+              builder: (context) => AddPost(
+                    photo: image,
+                    ctx: context,
+                  )),
         );
       }
     } catch (err) {

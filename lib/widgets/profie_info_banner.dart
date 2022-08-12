@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:insta/model/user.dart' as model;
-import 'package:insta/provider/user_procider.dart';
+import 'package:insta/provider/user_provider.dart';
 import 'package:insta/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
