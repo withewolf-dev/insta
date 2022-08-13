@@ -19,10 +19,10 @@ class _FavoriteAnimatedIconState extends State<FavoriteAnimatedIcon>
   void isliked() async {
     await FireStoreMethods()
         .likePost(widget.snap['postId'], widget.user.uid, widget.snap['likes']);
-    if (_isLiked) {
-      _isLiked = false;
-    } else {
+    if (!_isLiked) {
       _isLiked = true;
+    } else {
+      _isLiked = false;
     }
   }
 

@@ -15,7 +15,10 @@ class PostContainer extends StatelessWidget {
       child: Column(
         children: [
           PostCardTopRow(
-              displayPicture: snap['profImage'], username: snap['username']),
+            displayPicture: snap['profImage'],
+            username: snap['username'],
+            uid: snap['uid'],
+          ),
           const SizedBox(
             height: 10,
           ),

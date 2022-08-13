@@ -72,6 +72,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         : Scaffold(
             appBar: AppBar(
               elevation: 0,
+              leading: IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.black,
+                  )),
               backgroundColor: Colors.white,
               title: Text(
                 userData['username'],

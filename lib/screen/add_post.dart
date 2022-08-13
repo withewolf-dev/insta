@@ -41,11 +41,13 @@ class _AddPostState extends State<AddPost> {
         setState(() {
           isLoading = false;
         });
+        Navigator.of(context).pop();
         showSnackBar(
           context,
           'Posted!',
         );
       } else {
+        Navigator.of(context).pop();
         showSnackBar(context, res);
       }
     } catch (err) {
@@ -58,12 +60,6 @@ class _AddPostState extends State<AddPost> {
       );
     }
   }
-
-  // void clearImage() {
-  //   setState(() {
-  //     _file = null;
-  //   });
-  // }
 
   @override
   void dispose() {
@@ -80,12 +76,11 @@ class _AddPostState extends State<AddPost> {
         elevation: 0,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () {},
-        ),
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            )),
         title: const Text(
           'Post to',
           style: TextStyle(color: Colors.black),

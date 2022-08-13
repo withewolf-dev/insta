@@ -72,7 +72,6 @@ class BottomNavigation extends StatefulWidget {
 
 class _BottomNavigationState extends State<BottomNavigation> {
   int _selectedIndex = 0;
-  Uint8List? _image;
   late String uid;
 
   static const TextStyle optionStyle =
